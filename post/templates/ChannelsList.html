@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'assets/vendor/datatables/dataTables.bs5.css'%}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/datatables/dataTables.bs5-custom.css'%}" />
+
+<style>
+  /* Залишає стандартне відображення для великих екранів */
+.table-responsive .table thead {
+    display: table-header-group; /* Залишає заголовок на великих екранах */
+}
+
+.table-responsive .table tbody {
+    display: table-row-group;
+}
+
+/* Адаптивний стиль для мобільних пристроїв */
+@media (max-width: 768px) {
+    .table-responsive .table,
+    .table-responsive .table thead,
+    .table-responsive .table tbody,
+    .table-responsive .table tr,
+    .table-responsive .table th,
+    .table-responsive .table td {
+        display: block;
+        width: 100%; /* Розтягнути на всю ширину */
+    }
+
+    /* Сховати заголовок таблиці */
+    .table-responsive .table thead {
+        display: none;
+    }
+
+    /* Відображення кожного рядка як блокового елемента */
+    .table-responsive .table tr {
+        margin-bottom: 10px; /* Відступ між елементами */
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Додає імітацію заголовку перед кожним значенням */
+    .table-responsive .table td::before {
+        content: attr(data-label); /* Отримує назву стовпця з атрибута data-label */
+        font-weight: bold;
+        display: inline-block;
+        width: 120px; /* Ширина для "заголовку" */
+        color: #666;
+    }
+}
+
+</style>
+
+                <!-- Card start -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">{{title}} </div>
+                      <div class="text-end">
+                        <a href="#" class="btn btn-outline-info add_channels" 
+                        style="padding: 3px;" 
+                        data-channel-id="{{ c.pk }}" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#exampleModal">
+                          <i class="bi bi-plus-square m-0 p-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Додати канал"></i>
+                        </a>
+                     </div>
+                     
+                    </div>
+
+
+                  {% if errors %}
+                  <span class="alert alert-danger alert-dismissible fade show" hidden="none" data-message="{{ errors }}"></span>
+                  {% elif messages %}
+                  {% for message in messages %}
+                      {% if "error" in message.tags %}
+                      <span 
+                          class="alert alert-danger alert-dismissible fade show" 
+                          hidden="none" 
+                          data-message="{{ message }}">
+                      </span>
+                      {% elif "success" in message.tags %}
+                      <span 
+                          class="alert alert-success alert-dismissible fade show" 
+                          hidden="none" 
+                          data-message="{{ message }}">
+                      </span>
+                  {% endif %}
+                  
+                  {% endfor %}
+                  {% elif success %}
+                  <span 
+                      class="alert alert-success alert-dismissible fade show" 
+                      hidden="none" 
+                      data-message="{{ success }}">
+                  </span>
+                  {% endif %}
+
+
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="basicExample" class="table custom-table" style="font-size: 11px;">
+                        <thead>
+                          <tr>
+                            <th></th>
+
+                            <th>Назва</th>
+                            <th>Посилання</th>
+                            <th>Категорія</th>
+                            <th>Кількість постів</th>
+
+                            <th></th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for c in channels %}
+                          <tr>
+
+                              <td data-label="Внести зміни">
+                                <a href="#" class="btn btn-outline-info change_channels" 
+                                    style="padding: 3px;" 
+                                    data-channel-id="{{ c.pk }}" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#scrollable">
+                                    <i class="bi bi-pencil-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Внести зміни"></i>
+                                </a>
+                              </td>
+
+                              <td data-label="Назва">{{ c.name }}</td>
+                              <td data-label="Посилання">
+                                <a href="{{ c.link }}" 
+                                class="badge rounded-pill shade-bdr-primary" 
+                                target="_blank">Посилання</a>
+                              </td>
+                              <td data-label="Категорія">
+                                {% if c.category %}
+                                <span class="badge shade-green">{{ c.category }}</span>
+                                {% else %}
+                                <span class="badge shade-yellow">Відсутня</span>
+                                {% endif %}
+                              </td>
+                              <td>{{ c.unique_post_count }}</td>
+
+                              
+                              <td>
+                              <div class="text-end">
+                                <button type="button" class="btn btn-outline-danger delete_channels bi bi-trash m-0 p-1" data-channel-id="{{c.id}}" style="font-size: 20px;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Видалити канал"></button>
+                              </div>
+                            </td>
+
+                          </tr>
+                          {% endfor %}
+                      </tbody>                      
+                      </table>
+                      <div>
+   
+                </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card end -->
+
+
+
+                                <div class="modal fade" id="scrollable" tabindex="-1" aria-labelledby="scrollableLabel" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-scrollable">
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                              <h5 class="modal-title" id="scrollableLabel">Внести зміни</h5>
+                                          </div>
+                                          <form id="edit-channel-form" data-form-type="edit">
+                                            {% csrf_token %}
+                                            <div id='client-info-content'>
+                                              
+                                            </div>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+
+                              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Додати канал</h5>
+                                        </div>
+                                        <form id="add-channel-form" data-form-type="add" >
+                                          {% csrf_token %}
+                                          <div id='add-channel'>
+                                              
+                                          </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                              
+
+                              
+
+          {% load static %}  
+
+          <script src="{% static 'assets/js/alert.js' %}"></script>
+                      
+          <script>
+              // Очікуємо, поки сторінка повністю завантажиться
+              window.onload = function() {
+                  const alertElement = document.querySelector('.alert');
+   
+                  if (alertElement) {
+                      const type = alertElement.classList.contains('alert-danger') ? 'danger' : 'success';
+                      const message = alertElement.getAttribute('data-message');
+                      if (message && message.trim() !== '') {
+                          showAlert(type, message);
+                      }
+                  }
+              };
+
+              </script>
+
+<script>
+document.querySelectorAll('.change_channels').forEach(button => {
+    button.addEventListener('click', function () {
+        const channelId = this.getAttribute('data-channel-id');
+        fetch(`/change-channels/${channelId}`)
+            .then(response => response.text())
+            .then(html => {
+                const content = document.getElementById('client-info-content');
+                if (content) {
+                    content.innerHTML = html;
+                
+                    const form = document.querySelector('#edit-channel-form');
+                    if (form) {
+                        form.setAttribute('data-channel-id', channelId);
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching channel data:', error));
+    });
+});
+
+document.querySelectorAll('.add_channels').forEach(button => {
+    button.addEventListener('click', function () {
+        fetch(`/add-channels/`)
+            .then(response => response.text())
+            .then(html => {
+                const content = document.getElementById('add-channel');
+
+                if (content) {
+                    content.innerHTML = html;
+                }
+            })
+            .catch(error => console.error('Error fetching add channel form:', error));
+    });
+});
+
+
+
+document.querySelectorAll('.delete_channels').forEach(button => {
+    button.addEventListener('click', function () {
+      const channelId = this.getAttribute('data-channel-id');
+      fetch(`/delete-channels/${channelId}`, {
+            method: 'DELETE', 
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // CSRF токен
+            }
+        })
+            .then(response => response.json()) // Очікуємо JSON
+            .then(data => {
+                if (data.success) {
+                    location.reload(); 
+                } else {
+                    alert('Помилка: ' + JSON.stringify(data.errors));
+                }
+            })
+            .catch(error => console.error('Error deleting channel:', error));
+    });
+});
+
+
+
+document.addEventListener('submit', function (event) {
+    const form = event.target;
+    if (form.id === 'edit-channel-form' || form.id === 'add-channel-form') {
+        event.preventDefault(); 
+        const formType = form.getAttribute('data-form-type');
+        const actionUrl = formType === 'edit' 
+            ? `/change-channels/${form.getAttribute('data-channel-id')}`
+            : `/add-channels/`; 
+        const formData = new FormData(form);
+
+        fetch(actionUrl, {
+            method: 'POST',
+            body: formData,
+            
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload(); // Оновлення сторінки після успішного збереження
+            } else {
+                alert('Помилка: ' + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    } 
+});
+
+</script>
+{% load static %}  
+<script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
+
+   <!-- Overlay Scroll JS -->
+   <script src="{% static 'assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js' %}"></script>
+   <script src="{% static 'assets/vendor/overlay-scroll/custom-scrollbar.js' %}"></script>
+
+   <!-- Data Tables -->
+   <script src="{% static 'assets/vendor/datatables/dataTables.min.js' %}"></script>
+   <script src="{% static 'assets/vendor/datatables/dataTables.bootstrap.min.js' %}"></script>
+
+   <!-- Custom Data tables -->
+   <script src="{% static 'assets/vendor/datatables/custom/custom-datatables.js' %}"></script>
+
+
+
+{% endblock %}
+
+
+
+
+

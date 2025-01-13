@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block link %}
+    {% load static %}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
+
+    <!-- Meta -->
+    <meta name="description" content="ERP система для керування телеграм каналами та співробітниками">
+    <meta name="author" content="Hire.me" />
+    <meta property="og:url" content="#">
+    <meta property="og:title" content="ERP система - для керування телеграм каналами.">
+    <meta property="og:description" content="Спеціалізована система створенна для взаємодії з кадрами та клієнтами.">
+    <meta property="og:type" content="Website">
+    <meta property="og:site_name" content="Porahuy.space">
+    <link rel="shortcut icon" href="{% static 'assets/images/logo_min.png' %}">
+
+    {% endblock %}
+    <!-- Title -->
+    <title>{{title}}</title>
+  
+
+
+    <!-- *************
+			************ Common Css Files *************
+		************ -->
+
+    <!-- Animated css -->
+    <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+
+    <!-- Bootstrap font icons css -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/bootstrap/bootstrap-icons.css' %}">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="{% static 'assets/css/main.min.css' %}">
+
+
+ 
+    <link rel="stylesheet" href="{% static 'assets/vendor/overlay-scroll/OverlayScrollbars.min.css' %}">
+
+  </head>
+
+  <body>
+
+
+
+    <!-- Page wrapper start -->
+    <div class="page-wrapper">
+
+      <!-- Sidebar wrapper start -->
+      <nav class="sidebar-wrapper">
+
+        <!-- Sidebar brand starts -->
+        <div class="sidebar-brand">
+          <a href="{% url 'accounts:dashboard' %}" class="logo">
+            <img src="{% static 'assets/images/logo.png' %}" class="m-0" style="width: 120%; height: 120%;" alt="Dashboard">
+          </a>
+        </div>
+        <!-- Sidebar brand starts -->
+
+        <!-- Sidebar menu starts -->
+        <div class="sidebar-menu">
+          <div class="sidebarMenuScroll">
+            <ul>
+            <small class="text-muted" style="padding-left: 10px;">Календарі <i class="bi bi-calendar-fill" style="text-align: end;"></i></small>
+              <li class="sidebar-dropdown">
+                <a href="#">
+                  <i class="bi bi-calendar4"></i>
+                  <span class="menu-text">Основні</span>
+                </a>
+                <div class="sidebar-submenu">
+                  <ul>
+                                    {% for c in main_channels %}
+                                     
+                                    <li><a  href="{% url 'calendars:calendar' slug=c.slug %}" title="Calendar {{c.name}} "> {{c.name}}</a></li>
+                                    {% endfor %}
+                    </li>
+                       
+                  </ul>
+                </div>
+              </li>
+              <li class="sidebar-dropdown">
+                <a href="#">
+                  <i class="bi bi-calendar4"></i>
+                  <span class="menu-text">Регіональні</span>
+                </a>
+                <div class="sidebar-submenu">
+                  <ul>
+                                    {% for d in regional_channels %}
+                                    <li><a  href="{% url 'calendars:calendar' slug=d.slug %}" title="Calendar {{d.name}} "> {{d.name}}</a></li>
+                                    {% endfor %}
+                    </li>
+                       
+                  </ul>
+                </div>
+              </li>
+              <li class="sidebar-dropdown">
+                <a href="#">
+                  <i class="bi bi-calendar4"></i>
+                  <span class="menu-text">Закордонні</span>
+                </a>
+                <div class="sidebar-submenu">
+                  <ul>
+                        {% for z in zakordon %}
+
+                        <li><a  href="{% url 'calendars:calendar' slug=z.slug %}" title="Calendar {{z.name}} "> {{z.name}}</a></li>
+                       
+                        {% endfor %}
+                    </li>
+                       
+                  </ul>
+                </div>
+              </li>
+              <li class="sidebar-dropdown">
+                <a href="#">
+                  <i class="bi bi-calendar4"></i>
+                  <span class="menu-text">Спеціалізовані</span>
+                </a>
+                <div class="sidebar-submenu">
+                  <ul>
+                        {% for d in specialized_channels %}
+                        <li><a  href="{% url 'calendars:calendar' slug=d.slug %}" title="Calendar {{d.name}} "> {{d.name}}</a></li>
+                      
+                        {% endfor %}
+                    </li>
+                       
+                  </ul>
+                </div>
+              </li>
+              <li class="sidebar-dropdown" >
+                <a href="#">
+                  <i class="bi bi-calendar4"></i>
+                  <span class="menu-text">Боти</span>
+                </a>
+                <div class="sidebar-submenu">
+                  <ul>
+                        {% for d in bots %}
+                        <li><a  href="{% url 'calendars:calendar' slug=d.slug %}" title="Calendar {{d.name}} "> {{d.name}}</a></li>
+                        {% endfor %}
+                    </li>
+                       
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a href="{% url 'posts:channels' %}">
+                  <i class="bi bi-megaphone"></i>
+                  <span class="menu-text">Канали</span>
+                </a>
+              </li>
+         
+              
+         
+
+           
+             
+
+
+             
+             
+
+         
+            <small class="text-muted" style="padding-left: 10px;"> Унікальні клієнти <i class="bi bi-cart-fill" style="text-align: end;"></i></small>
+
+              <li>
+                <a href="{% url 'sales:unique-all'%}">
+                  <i class="bi bi-cart-check"></i>
+                  <span class="menu-text">Унікальні клієнти</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'sales:AddClients' %}">
+                  <i class="bi bi-cart-plus"></i>
+                  <span class="menu-text">Додати клієнта</span>
+                </a>
+              </li>
+          <li>
+                <a href="{% url 'posts:arkhiv_posts'%}">
+                  <i class="bi bi-card-checklist"></i>
+                  <span class="menu-text">Оброблені</span>
+                </a>
+                </li>
+         
+    
+   
+
+               
+            </ul>
+          </div>
+        </div>
+        <!-- Sidebar menu ends -->
+
+      </nav>
+      <!-- Sidebar wrapper end -->
+
+      <!-- *************
+				************ Main container start *************
+			************* -->
+      <div class="main-container">
+
+        <!-- Page header starts -->
+        <div class="page-header">
+
+          <!-- Toggle sidebar start -->
+          <div class="toggle-sidebar" id="toggle-sidebar"><i class="bi bi-list"></i></div>
+          <!-- Toggle sidebar end -->
+
+          <!-- Logo sm starts -->
+          <a href="{% url 'accounts:dashboard' %}" class="d-lg-none d-md-block">
+            <img src="{% static 'assets/images/logo.png' %}" class="logo-sm" alt="Dashboard">
+          </a>
+           
+          <!-- Logo sm ends -->
+
+          <!-- Breadcrumb start -->
+          <ol class="breadcrumb d-lg-flex d-none">
+            <li class="breadcrumb-item">
+              <a  href="{% url 'accounts:dashboard' %}">
+            <img src="{% static 'assets/images/logo_min.png' %}" class="logo-sm" style="margin-left: 10px;"  alt="Dashboard"></a>
+          </li>
+            <li class="breadcrumb-item"><a href="{{previous_url}}">{{previous_title}}</a></li>
+            <li class="breadcrumb-item breadcrumb-active" aria-current="page">{{title}}</li>
+          </ol>
+          <!-- Breadcrumb end -->
+       
+            <!-- Time container start -->
+            <div class="leads d-none d-xl-flex">
+              <ul class="date-top">
+                <i class="bi bi-calendar-event"></i>
+  
+                  <li class="entypo-calendar" style="margin-right:5px; display: inline;"></li>
+                  <li id="Date" style="display: inline;">{{date_header}}</li>
+                </ul>
+                &nbsp;
+                &nbsp;
+              <i class="bi bi-clock"></i>
+             
+              <!-- Time group start -->
+                <ul id="digital-clock" class="digital" >
+                    <li class="entypo-clock" style="margin-right:5px; display: inline;"></li>
+                    <li class="hour" style="display: inline;"></li>
+                    <li style="display: inline;">:</li>
+                    <li class="min" style="display: inline;"></li>
+                </ul>
+              <!-- Time group end -->
+
+            </div>
+            <!-- Time container end -->
+
+            <!-- Header actions start -->
+            <ul class="header-actions">
+              <li class="dropdown">
+                <a href="#" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
+                  <span class="user-name d-none d-xl-flex">{{ user.first_name }} {{ user.last_name }}</span>
+                  <span class="avatar">
+                    {% if user.profile_img %}
+                    <img alt="" src="{{ user.profile_img.url }}">
+
+                    {% else %} 
+                    <img alt=""  src="{{ defualut_image }}">
+                    <span class="status online"></span>
+                    {%endif%}
+                  </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userSettings">
+                  <div class="header-profile-actions" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <form method="post" action="{% url 'accounts:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-info btn-rounded bi bi-box-arrow-in-left">Вихід</button>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <!-- Header actions end -->
+
+          </div>
+          <!-- Header actions ccontainer end -->
+
+        
+    
+
+
+
+
+        <!-- Page header ends -->
+
+        <!-- Content wrapper scroll start -->
+        <div class="content-wrapper-scroll">
+         
+          <!-- Content wrapper start -->
+          <div class="content-wrapper">
+
+            <div class="row">
+              <div class="col-xl-12 col-sm-6 col-12">
+           
+                  {% block helper %}
+                  {% endblock %}
+       
+              </div>
+    
+            </div>
+           
+
+            <!-- Row start -->
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                 <div class="card-320">
+
+                        {% block content %}
+              
+                  
+                  
+                        {% endblock %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Row end -->
+            <div class="row">
+              <div class="col-xl-12 col-sm-6 col-12">
+           
+                {% block helper_footer %}
+                {% endblock %}
+       
+              </div>
+    
+            </div>
+        
+          </div>
+        </div>
+          <!-- Content wrapper end -->
+
+          <!-- App Footer start -->
+          <div class="app-footer">
+            <span>© Porahuy.space 2024</span>
+          </div>
+          <!-- App footer end -->
+
+        </div>
+        <!-- Content wrapper scroll end -->
+
+      </div>
+
+
+    </div>
+    {% load static %}
+
+   <script src="{% static 'assets/js/moment.js'%}"></script>
+
+
+    <!-- *************
+			************ Vendor Js Files *************
+		************* -->
+
+    <!-- Overlay Scroll JS -->
+    <script src="{% static 'assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js'%}"></script>
+    <script src="{% static 'assets/vendor/overlay-scroll/custom-scrollbar.js'%}"></script>
+
+
+    <!-- Main Js Required -->
+<script src="{% static 'assets/js/main.js'%}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.min.js"></script>
+<script>
+    head.js("{% static 'assets/js/clock/jquery.clock.js' %}", function() {
+
+//clock
+$('#digital-clock').clock({
+    offset: '+2',
+    type: 'digital',
+    showSeconds: false
+});
+
+
+});
+
+</script>
+  </body>
+
+</html>

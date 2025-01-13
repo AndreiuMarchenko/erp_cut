@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block helper %}
+
+{% load static %}
+
+  <!-- Date Range CSS -->
+  <link rel="stylesheet" href="{% static 'assets/vendor/daterange/daterange.css'%}">
+
+<div class="accordion" style="margin-bottom: 10px;" id="accordionExample2">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOneLight">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneLight" aria-expanded="false" aria-controls="collapseOneLight"><i class="bi bi-funnel"></i></button>
+      </h2>
+    <div id="collapseOneLight" class="accordion-collapse collapse" aria-labelledby="headingOneLight" data-bs-parent="#accordionExample2">
+        <div class="accordion-body">
+            <form method="get" style="margin-bottom: 10px;">
+            <div class="row">
+                <div class="col-12">
+                  <div class="form-section-title">Фільтрувати дані</div>
+                </div>
+
+                {% for f in form %}
+                <div class="col-xl-3 col-sm-4 col-12">
+                        <div class="mb-2">
+                            <label for="inputName" class="form-label">{{f.label}}</label>
+                        {{f}}
+                        </div>
+                </div>
+                {%endfor%}
+            </div>  
+            <button type="submit" class="btn btn-outline-info bi bi-search m-2 "></button>
+            </form>  
+        </div>
+    </div>
+</div>
+</div>
+{% load static %}
+
+    <!-- Date Range JS -->
+    <script src="{% static 'assets/js/moment.js'%}"></script>
+
+    <script src="{% static 'assets/vendor/daterange/daterange.js' %}"></script>
+    <script src="{% static 'assets/vendor/daterange/custom-daterange.js' %}"></script>
+{% endblock %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'assets/vendor/datatables/dataTables.bs5.css'%}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/datatables/dataTables.bs5-custom.css'%}" />
+
+<style>
+  /* Залишає стандартне відображення для великих екранів */
+.table-responsive .table thead {
+    display: table-header-group; /* Залишає заголовок на великих екранах */
+}
+
+.table-responsive .table tbody {
+    display: table-row-group;
+}
+
+/* Адаптивний стиль для мобільних пристроїв */
+@media (max-width: 768px) {
+    .table-responsive .table,
+    .table-responsive .table thead,
+    .table-responsive .table tbody,
+    .table-responsive .table tr,
+    .table-responsive .table th,
+    .table-responsive .table td {
+        display: block;
+        width: 100%; /* Розтягнути на всю ширину */
+    }
+
+    /* Сховати заголовок таблиці */
+    .table-responsive .table thead {
+        display: none;
+    }
+
+    /* Відображення кожного рядка як блокового елемента */
+    .table-responsive .table tr {
+        margin-bottom: 10px; /* Відступ між елементами */
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Додає імітацію заголовку перед кожним значенням */
+    .table-responsive .table td::before {
+        content: attr(data-label); /* Отримує назву стовпця з атрибута data-label */
+        font-weight: bold;
+        display: inline-block;
+        width: 120px; /* Ширина для "заголовку" */
+        color: #666;
+    }
+}
+
+</style>
+
+                <!-- Card start -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">{{title}}</div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="basicExample" class="table custom-table" style="font-size: 11px;">
+                        <thead>
+                          <tr>
+                            <th>Канал</th>
+                            <th>id</th>
+                            <th>username</th>
+                            <th>Тариф</th>
+                            <th>Категорія</th>
+                            <th>Тип</th>
+                            <th>Оплата</th>
+                            <th>Дата сплати</th>
+                            <th>Дата поста</th>
+                            <th>Час поста</th>
+                            <th>Sales</th>
+                            <th>Контент менеджер</th>
+                            <th>Статус</th>
+                            <th></th>
+
+
+              
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {%for c in posts %}
+                           
+                            <tr style="vertical-align: middle;">
+                                <td data-label="Канал">{{ c.channel }}</td>
+                                <td data-label="#">{{ c.post.id }}</td>
+                                <td data-label="Username">{{ c.post.username }}</td>
+                                <td data-label="Тариф">{{ c.tarif }}</td>
+                                <td data-label="Категорія">{{ c.post.category }}</td>
+                                <td data-label="Тип">{{ c.post.types.name }}</td>
+                                <td data-label="Оплата">{{ c.post.payment_in }}</td>
+                                <td data-label="Дата сплати">{{ c.post.date_payment }}</td>
+                                <td data-label="Дата публікації">{{ c.date_post }}</td>
+                                <td data-label="Час публікації">{{ c.time_post }}</td>
+                                <td data-label="Sales">{{ c.post.sales }}</td>
+                                <td data-label="Content">{{ c.post.content }}</td>
+    				            <td data-label="Статус">
+                                    {% if not c.status_write %}
+                                    <span class="badge shade-red">Необробленний</span>
+                                    {% else %}
+                                    <span class="badge shade-green">Обробленний</span>
+                                    {% endif %}
+
+                                </td>
+
+				                <td data-label="Відкрити публікацію"><a href="{% url 'posts:view_invoice' slug=c.post.slug %}" class="btn btn-outline-info"> <i class="bi bi-person-square m-0"></i> </a></td>
+
+
+                            </tr>
+                            {%endfor%}
+                        </tbody>
+                      </table>
+                      <div>
+                        {% if page_obj.has_next %}
+                            <a href="?{% if query_params %}{{ query_params }}{% else %}query=&where=&data=&process=0{% endif %}&page={{ page_obj.next_page_number }}"  class="btn btn btn-outline-info m-2 bi bi-arrow-right-square-fill" > Завантажити ще... </a>
+                        {% endif %}     
+                </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card end -->
+
+
+       
+        
+
+
+
+{% load static %}  
+<script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
+
+   <!-- Overlay Scroll JS -->
+   <script src="{% static 'assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js' %}"></script>
+   <script src="{% static 'assets/vendor/overlay-scroll/custom-scrollbar.js' %}"></script>
+
+   <!-- Data Tables -->
+   <script src="{% static 'assets/vendor/datatables/dataTables.min.js' %}"></script>
+   <script src="{% static 'assets/vendor/datatables/dataTables.bootstrap.min.js' %}"></script>
+
+   <!-- Custom Data tables -->
+   <script src="{% static 'assets/vendor/datatables/custom/custom-datatables.js' %}"></script>
+
+
+
+   <!-- Settings -->
+
+{% endblock %}
+
+

@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+
+
+
+
+{% block content %}
+
+{% load static %}
+
+
+<div class="card">
+    <div class="card-header">
+      <div class="card-title">{{title}}</div>
+    </div>
+    <div class="row m-3">
+      <p class="mb-2">
+        {% if post.content %}
+        <figcaption class="blockquote-footer">
+         Останні зміни вніс <cite title="Source Title">{{ post.content.first_name }} {{ post.content.last_name }}</cite>
+        </figcaption>
+        {% endif %}
+              <div class="col-lg-4 col-sm-6 col-6">
+                  <div class="customer-card">
+                    <h6>Post ID:</h6>
+                    <h5>#{{ post.id }}</h5>
+                  </div>
+                </div>  
+                <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Тариф:</h6>
+                      <h5>{{ channel_post.tarif }} грн</h5>
+                    </div>
+                  </div>  
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Username:</h6>
+                      <h5>{{ post.username  }}</h5>
+                    </div>
+                  </div>  
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Тип:</h6>
+                      <h5>{{ post.types  }}</h5>
+                    </div>
+                  </div>  
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Дата оплати:</h6>
+                      <h5>{{ post.date_payment  }}</h5>
+                    </div>
+                  </div>  
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Дата публікації:</h6>
+                      <h5>{{ post.date_payment  }}</h5>
+                    </div>
+                  </div>  
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Категорія:</h6>
+                      <h5>{{ post.category  }}</h5>
+                    </div>
+                  </div> 
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Sales:</h6>
+                      <h5>{{ post.sales }}</h5>
+                    </div>
+                  </div> 
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Контент менеджер:</h6>
+                     {% if channel_post.status_write == True %}
+                      <h5>{{ channel_post.content_update }} | {{ channel_post.content_update.first_name }} {{ channel_post.content_update.last_name }} <span class="badge shade-green"><i class="bi bi-check-square"></i></span> </h5>
+                      {% else %}
+                      <h5><span class="badge shade-red"> Необробленна</span></h5>
+                      {%endif%}
+                    </div>
+                  </div>   
+                  <div class="col-lg-6 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Текст публікації:</h6>
+                      <blockquote class="blockquote">
+                        <p>{{ post.posts_text }}</p>
+                      </blockquote>
+                    </div>
+                  </div>
+                  {% if post.scrin %}
+
+                  <div class="col-lg-6 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Оплата:</h6>
+                      <blockquote class="blockquote">
+                        <img class="img-responsive-media" style="width: 50%; height: 50%;" src="{{ post.scrin.url }}" alt="">
+                      </blockquote>
+                    </div>
+                  </div>         
+                    {%endif%}
+                </div>
+</div>
+
+      <div class="form-actions-footer">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success bi bi-check-square m-2"
+                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Обробити"
+                            ></button>
+                        </form>
+                          <form method="get" action="{% url 'posts:update_posts' slug=post.slug %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning to-upd bi bi-pencil-square m-2"
+                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Внести зміни в пост"></button>
+                        </form>
+                    </div>
+                        {% block upd %}
+                        {% endblock upd %}
+{% load static %}
+
+<script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
+
+{% endblock %}
+

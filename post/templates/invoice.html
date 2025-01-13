@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+
+
+
+
+{% block content %}
+
+{% load static %}
+
+    <!-- Date Range CSS -->
+       <!-- Row starts -->
+       <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body" id="invoice-in-pdf">
+
+              <!-- Row starts -->
+              <div class="row gx-2 text-align-center">
+            
+                <div class="col-sm-6 col-12">
+     
+             </div>
+                <div class="col-sm-6 col-12">
+                  <p class="text-end m-0">
+                    Менеджер Hire.me,<br>
+                    {{post_data.post.sales.first_name}} {{post_data.post.sales.last_name}},<br>
+                    <i class="bi bi-telegram" style="color: rgb(54, 136, 250);"></i> Telegram: {{post_data.post.sales.tgusername}}
+                  </p>
+                </div>
+              </div>
+              <!-- Row ends -->
+
+              <!-- Row starts -->
+              <div class="row">
+                <div class="col-12">
+                  <div class="d-flex justify-content-between my-4">
+                    <p class="m-0">
+                      Замовлення клієнта,<br>
+                    <span class="m-0" id="client-tg">
+                        <i class="bi bi-telegram" style="color: rgb(54, 136, 250);"></i> Telegram: {{post_data.post.username}}
+                    </span>,<br>
+                    Категорія - {{post_data.post.category.name}} 
+                    </p>
+                    <div class="text-end">
+                      <p class="m-0 badge shade-bdr-dark">Invoice - #{{post_data.post.id}}</p><br>
+                      <p class="m-0 badge shade-bdr-dark" id="date_now">Дата створення Invoice - {{date_now}}</p><br>
+                      <p class="m-0 badge shade-bdr-green text-end">Дата сплати - {{post_data.post.date_payment}}</p>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Row ends -->
+
+              <!-- Row starts -->
+              <div class="row">
+                <div class="col-12">
+                  <div class=" mb-2">
+                    <div class="table-responsive ">
+                      <table class="table table-bordered truncate" >
+                        <thead>
+                          <tr>
+                            <th >Канали</th>
+                            <th>Дата публікації</th>
+                            <th>Час публікації</th>
+                            <th>Тариф</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for p in post %}
+                          <tr>        
+                            <td>
+                              <a class="btn btn-outline-info m-0 p-1" href="/detail_post/{{p.post.slug}}/{{p.id}}/" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Відкрити повні дані">{{p.channel.name}} </a>
+                            </td>
+                            <td>
+                              <h6>{{p.date_post}}</h6>
+                            </td>
+                            <td>
+                              <h6>{{p.time_post}}</h6>
+                            </td>
+                            <td>
+                              <h6 id="tarif" value="{{p.tarif}}"><mark>{{p.tarif}}</mark></h6>
+                            </td>
+                          </tr>
+                        </a>
+                          {% endfor %}
+                          <tr>
+                            <td colspan="2">&nbsp;</td>
+                            <td>
+                              <h5 class="mt-4" style="color: rgb(54, 136, 250);">Загальна сума</h5>
+                            </td>
+                            <td>
+                              <h5 class="mt-4 text-success" id="sum-tarif">0 грн</h5>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+                              <h6 class="text-danger">Уточнення</h6>
+                              <small class="text-wrap">
+                                Ми дуже цінуємо ваш бізнес і якщо ми можемо зробити щось ще, будь ласка, дайте нам знати! З повагою команда Hire.me.
+                              </small>
+                            </td>
+                            <td colspan="2">&nbsp;</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Row ends -->
+            </div>
+          </div>
+        </div>
+       </div>
+              <!-- Row ends -->
+
+       <div class="form-actions-footer">
+        <form method="get" action="{% url 'posts:update_posts' slug=post_data.post.slug %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-warning to-upd bi bi-pencil-square m-2 "
+          data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Внести зміни в пост"></button>
+      </form>
+
+        <button class="btn btn-success m-2 bi bi-download"
+        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Завантажити в PDF"
+        ></button>
+      </div>
+       
+{% block js %}
+
+
+
+
+{% load static %}
+<!-- Data Tables -->
+<script src="{% static 'assets/js/jquery.min.js'%}"></script>
+<script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
+<script src="{% static 'assets/js/modernizr.js'%}"></script>
+<script src="{% static 'assets/js/moment.js'%}"></script>
+
+
+
+<script>
+
+$(document).ready(function() {
+
+    var tarifElements = document.querySelectorAll('#tarif');
+    let totalSum = 0;
+    
+    tarifElements.forEach(function(element) {
+        let value = parseFloat(element.textContent);
+        if (!isNaN(value)) {
+            totalSum += value;
+        }
+    });
+
+    // Відобразити загальну суму
+    document.getElementById('sum-tarif').textContent = totalSum.toFixed(2) + ' грн';
+});
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+document.querySelector('.btn-success').addEventListener('click', function() {
+    const { jsPDF } = window.jspdf;
+
+    // Отримуємо елемент, який треба захопити
+    const element = document.getElementById('invoice-in-pdf');
+
+    html2canvas(element, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4', {
+            compress: true, // Стискання PDF для зменшення розміру файлу
+            precision: 100  // Підвищення точності
+        });
+
+        const imgWidth = 210; // Ширина A4 у мм
+        const pageHeight = 295; // Висота A4 у мм
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let position = 0;
+
+        // Додаємо першу сторінку
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+
+        // Перевірка, чи контент виходить за межі сторінки
+        if (imgHeight > pageHeight) {
+            // Починаємо з другої сторінки, якщо більше однієї
+            position = pageHeight;
+
+            // Додаємо сторінки, поки весь контент не вміститься
+            while (position < imgHeight) {
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, -position, imgWidth, imgHeight);
+                position += pageHeight;
+            }
+        }
+
+        // Отримуємо назву файлу з елементів
+        const name_file_tg = document.getElementById('client-tg').textContent.trim();
+        const name_file_date = document.getElementById('date_now').textContent.trim();
+
+        // Зберігаємо PDF з відповідною назвою
+        pdf.save(`${name_file_tg}_${name_file_date}.pdf`);
+    });
+});
+</script>
+
+  
+
+{% endblock js %}
+{% endblock %}

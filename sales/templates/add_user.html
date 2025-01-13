@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+                <!-- Card start -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">{{title}}</div>
+                  </div>
+                  {% if form_errors %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-x-circle alert-icon"></i>
+                    {% for field, errors in form_errors.items %}
+                    <li><strong>{{ field }}:</strong>
+                       
+                            {% for error in errors %}
+                            {{ error.message }}
+                            {% endfor %}
+                    
+                {% endfor %}
+                  </div>
+                {% endif %}
+                  <div class="card-body">
+
+                    <!-- Row start -->
+                    <form method="post">
+                        {% csrf_token %}                 
+                        <div class="row">
+                        {% for f in form %}
+                            {% if f.field.widget.attrs.checkbox_arg %}
+                                <!-- Секція для відображення групи чекбоксів -->
+                                <div class="col-xl-8 col-sm-4 col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label"  for="{{ f.id_for_label }}">{{ f.label }}</label>  <br>
+                                        {% for checkbox in f %}
+                                            <div class="form-check form-check-inline">
+                                                {{ checkbox.tag }}
+                                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <!-- Секція для звичайних полів -->
+                                <div class="col-xl-3 col-sm-4 col-12">
+                                    <div class="mb-3">
+                                        {% if f.field.widget.attrs.custom_arg %}
+                                            <label for="{{ f.id_for_label }}" class="form-label">{{ f.label }}:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">{{ f.field.widget.attrs.custom_arg }}</span>
+                                                {{ f }}
+                                            </div>
+                                        {% else %}
+                                            <label for="{{ f.id_for_label }}" class="form-label">{{ f.label }}:</label>
+                                            {{ f }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                        <!-- Row end -->
+
+                        <!-- Form actions footer start -->
+                        <div class="form-actions-footer">
+                        <button class="btn btn-success">{{btn_name}}</button>
+                        </div>
+                        <!-- Form actions footer end -->
+                    </form>
+
+                    </div>
+                </div>
+                <!-- Card end -->
+
+{% endblock %}

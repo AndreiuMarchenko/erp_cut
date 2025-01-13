@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+
+
+{% block helper %}
+
+
+
+  <!-- Date Range CSS -->
+
+<div class="accordion" style="margin-bottom: 10px;" id="accordionExample2">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOneLight">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneLight" aria-expanded="false" aria-controls="collapseOneLight"><i class="bi bi-funnel"></i></button>
+      </h2>
+    <div id="collapseOneLight" class="accordion-collapse collapse" aria-labelledby="headingOneLight" data-bs-parent="#accordionExample2">
+        <div class="accordion-body">
+            <div class="body-nest" id="StackableStatic" style="overflow-x: auto;">
+                <div class="calendar-navigation" style="margin-bottom: 10px;">
+                    <a href="?year={{ prev_month.year }}&month={{ prev_month.month }}" class="btn btn-outline-info">Минулий Місяць</a>
+                    <a href="?year={{ next_month.year }}&month={{ next_month.month }}" class="btn btn-outline-info">Наступний Місяць</a>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<style>
+
+.table-responsive {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+
+}
+    .table {
+    font-size: 12px; /* Зменшує розмір тексту в таблиці */
+    width: 100%;
+    table-layout: fixed; /* Забезпечує рівномірний розподіл простору */
+}
+
+.calendar-cell {
+    padding: 2px; /* Зменшує відступи всередині клітинок */
+    
+}
+
+.calendar-cell .date-add-text {
+    font-size: 10px; /* Зменшує розмір тексту дати */
+}
+
+.calendar-cell .posts-container td {
+    padding: 2px 5px; /* Зменшує відступи у постах */
+    
+}
+
+.badge {
+    font-size: 10px; /* Зменшує розмір тексту бейджів */
+    padding: 2px 5px; /* Зменшує відступи в бейджах */
+}
+
+.table th:last-child, .table td:last-child {
+    width: auto; /* Розтягує останню колонку до кінця */
+    text-align: right; /* Вирівнювання тексту по правому краю */
+}
+.table {
+    border-collapse: collapse; /* Об’єднання меж комірок */
+}
+
+.table td, .table th {
+    border-bottom: none; /* Вимкнення нижнього кордону для комірок */
+}
+
+.table td, .table th {
+    border-top: none; /* Вимкнення верхнього кордону для комірок, якщо потрібно */
+}
+.table-responsive .table thead {
+    display: table-header-group; /* Показує заголовок на великих екранах */
+}
+
+.table-responsive .table tbody {
+    display: table-row-group; /* Звичайне відображення рядків */
+}
+
+/* Адаптивний стиль для мобільних пристроїв */
+@media (max-width: 1000px) {
+    .table-responsive .table,
+    .table-responsive .table thead,
+    .table-responsive .table tbody,
+    .table-responsive .table tr,
+    .table-responsive .table th,
+    .table-responsive .table td {
+        display: block;
+        width: 100%; /* Розтягнути кожний елемент на всю ширину */
+    }
+
+    /* Сховати заголовок таблиці */
+    .table-responsive .table thead {
+        display: none;
+    }
+
+    /* Додати стиль для кожного рядка таблиці */
+    .table-responsive .table tr {
+        margin-bottom: 5px; /* Відступ між елементами */
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Стиль для кожної ячейки, щоб імітувати заголовки */
+    .table-responsive .table td::before {
+        content: attr(data-label); /* Отримує назву стовпця з атрибуту data-label */
+        font-weight: bold;
+        display: inline-block;
+        width: 100px; /* Фіксована ширина для заголовку */
+        color: #666;
+    }
+}
+
+</style>
+    <div class="card">
+        <div class="card-header">
+          <div class="card-title">{{title}} за {{ month_name }}</div>
+        </div>
+        <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" >Нд</th>
+				                    <th scope="col">Пн</th>
+                                    <th scope="col">Вт</th>
+                                    <th scope="col">Ср</th>
+                                    <th scope="col">Чт</th>
+                                    <th scope="col">Пт</th>
+                                    <th scope="col">Сб</th>
+                                   
+				                    </tr>
+                            </thead>
+                            <tbody>
+                                {% for week in dates %}
+                                <tr>
+                                    {% for date in week %}
+                                    <td class="calendar-cell" data-date="{{ date }}">
+                                        <p class="date-add-text large-only"></p>
+                                        <table class="table large-only" style="border: none;">
+                                            <thead>
+                                    
+                                            </thead>
+                                            <tbody class="posts-container">
+                                                {% for hour in hours %}
+                                                <tr>
+                                                    <td style="font-size: 8px;">{{ hour }}</td>
+                                                    <td colspan="3"></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+        </div>
+</div>
+</div>
+</div>
+
+</div>
+
+
+
+
+
+
+{% load static %}  
+<script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
+
+<script>
+$(document).ready(function() {
+    var ukrainianMonths = {
+        "січня": "January",
+        "лютого": "February",
+        "березня": "March",
+        "квітня": "April",
+        "травня": "May",
+        "червня": "June",
+        "липня": "July",
+        "серпня": "August",
+        "вересня": "September",
+        "жовтня": "October",
+        "листопада": "November",
+        "грудня": "December"
+    };
+
+    $(".calendar-cell").each(function() {
+        var date = $(this).data("date");
+        var cell = $(this);
+
+        // Expect date format: "01 вересня 2024 р."
+        var dateParts = date.split(" ");
+        var day = dateParts[0]; // "01"
+        var monthUkrainian = dateParts[1]; // "вересня"
+        var year = dateParts[2]; // "2024"
+        
+        var month = ukrainianMonths[monthUkrainian.toLowerCase()]; // "September"
+        year = year.replace("р.", "").trim(); // Remove "р." and any spaces
+
+        if (month) {
+            // Format as "Month Day, Year" for JavaScript Date parsing
+            var dateString = `${month} ${day}, ${year}`;
+            var dateObject = new Date(dateString);
+
+            if (!isNaN(dateObject.getTime())) {
+                // Convert to ISO string and extract the date part
+                var formattedDate = dateObject.toISOString().split('T')[0];
+                console.log(formattedDate); // For debugging: log the correct date
+                cell.find(".date-add-text").append(formattedDate.split("-")[2]);
+
+                $.ajax({
+                    url: "{% url 'calendars:calendar_data' slug=slug %}",
+                    data: {
+                        date: formattedDate
+                    },
+                    success: function(data) {
+                        var postsContainer = cell.find(".posts-container");
+                        postsContainer.empty();
+
+                        var postsByTime = {};
+                        data.forEach(function(post) {
+                            postsByTime[post.time_post.slice(0, 5)] = post;
+                        });
+
+                        var allHours = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
+                        allHours.forEach(function(hour) {
+                            var post = postsByTime[hour];
+                            var row = post ? `<tr> 
+                                    <td style="font-size: 8px;" ><span class="badge rounded-pill shade-dark m-0">${hour}</span></td>
+                                
+                                    <td style="padding: 2px;"><a href='/view-invoice/${post.slug}' class=' ${post.status_write ? 'btn btn-outline-success' :  'btn btn-outline-danger' } p-1 m-0' style='font-size:10px;width:80px;'>${post.category_name}
+                                     
+                                    </a></td>
+                                </tr>` :
+                                `<tr>
+                                    <td style="font-size: 8px;"></td>
+                        
+                                    <td colspan='2'></td>
+                                </tr>`;
+                            postsContainer.append(row);
+                        });
+                    }
+                });
+            } else {
+                console.error("Invalid date format:", dateString);
+            }
+        } else {
+            console.error("Invalid month in date:", date);
+        }
+    });
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'assets/vendor/datatables/dataTables.bs5.css'%}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/datatables/dataTables.bs5-custom.css'%}" />
+
+<style>
+  /* Залишає стандартне відображення для великих екранів */
+.table-responsive .table thead {
+    display: table-header-group; /* Залишає заголовок на великих екранах */
+}
+
+.table-responsive .table tbody {
+    display: table-row-group;
+}
+
+/* Адаптивний стиль для мобільних пристроїв */
+@media (max-width: 768px) {
+    .table-responsive .table,
+    .table-responsive .table thead,
+    .table-responsive .table tbody,
+    .table-responsive .table tr,
+    .table-responsive .table th,
+    .table-responsive .table td {
+        display: block;
+        width: 100%; /* Розтягнути на всю ширину */
+    }
+
+    /* Сховати заголовок таблиці */
+    .table-responsive .table thead {
+        display: none;
+    }
+
+    /* Відображення кожного рядка як блокового елемента */
+    .table-responsive .table tr {
+        margin-bottom: 10px; /* Відступ між елементами */
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Додає імітацію заголовку перед кожним значенням */
+    .table-responsive .table td::before {
+        content: attr(data-label); /* Отримує назву стовпця з атрибута data-label */
+        font-weight: bold;
+        display: inline-block;
+        width: 120px; /* Ширина для "заголовку" */
+        color: #666;
+    }
+}
+
+</style>
+
+                <!-- Card start -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">{{title}}</div>
+                  </div>
+                  {% if errors %}
+                  <span class="alert alert-danger alert-dismissible fade show" hidden="none" data-message="{{ errors }}"></span>
+                  {% elif messages %}
+                  {% for message in messages %}
+                      {% if "error" in message.tags %}
+                      <span 
+                          class="alert alert-danger alert-dismissible fade show" 
+                          hidden="none" 
+                          data-message="{{ message }}">
+                      </span>
+                      {% elif "success" in message.tags %}
+                      <span 
+                          class="alert alert-success alert-dismissible fade show" 
+                          hidden="none" 
+                          data-message="{{ message }}">
+                      </span>
+                  {% endif %}
+                  
+                  {% endfor %}
+                  {% elif success %}
+                  <span 
+                      class="alert alert-success alert-dismissible fade show" 
+                      hidden="none" 
+                      data-message="{{ success }}">
+                  </span>
+                  {% endif %}
+
+
+                  
+                    <div class="alert shade-bdr-light text-dark alert-dismissible fade show" id='helperbox' role="alert" style="display: none;">
+                      <a href="#" class="btn btn-outline-info" style="padding: 3px;" data-bs-toggle="modal" data-bs-target="#exampleModal">Передати іншому користувачу</a>
+                      <a href="#" class="btn btn-outline-info" id="copy-cilents" style="padding: 3px;">Скопіювати</a>
+
+                    </div>
+                    
+<!-- модалка для переноса клієнта -->
+                  <link rel="stylesheet" href="{% static 'assets/vendor/bs-select/bs-select.css' %}">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Перенести клієнта користувачу</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="m-0" data-select2-id="select2-data-122-iy9g">
+                              <label class="form-label d-flex">Обрати користувача</label>
+                              <select id="select-users" class="select-single js-states form-control select2-hidden-accessible" title="Select Product Category" data-live-search="true" data-select2-id="select2-data-1-htdm" tabindex="-1" aria-hidden="true" style="width: 100%;">
+                                {% for user in users_company %}
+                                <option value="{{user.id}}">{{ user.first_name }} {{ user.last_name }}</option>
+                                {% endfor %}
+</select>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button id="update-clients" type="button" class="btn btn-success" data-bs-dismiss="modal">Перенести</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <script src="{% static 'assets/vendor/bs-select/bs-select.min.js' %}"></script>
+                    <script src="{% static 'assets/vendor/bs-select/bs-select-custom.js' %}"></script>
+                      
+
+
+
+
+
+
+
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="basicExample" class="table custom-table" style="font-size: 11px;">
+                        <thead>
+                          <tr>
+                            <th></th>
+
+                            <th></th>
+                            <th>Дата створення</th>
+                            <th>Джерело</th>
+                            <th>Локація</th>
+
+                            <th>Username</th>
+
+                            <th>Sales</th>
+                            <th>Посилання на вакансію</th>
+                            <th>Статус клієнта</th>
+                            <th>Дія</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {%for c in clients %}
+                          <tr style="vertical-align: middle;">
+                            <td data-label="Обрати клієнта">
+                              <div class="form-check">
+                              <input class="form-check-input get-client-id-for-change" type="checkbox" value="" id="flexCheckDefault"  data-client-id="{{ c.pk }}">
+                              </div>
+                             </td>
+
+                            <td data-label="Відкрити профіль"><a href="#" class="btn btn-outline-info get-client-info" style="padding: 3px;" data-client-id="{{ c.pk }}" data-bs-toggle="modal" data-bs-target="#scrollable"><i class="bi bi-person-square m-0"></i></a></td>
+                            <td  data-label="Дата створення">{{ c.data|slice:":10" }}</td>
+                            <td  data-label="Джерело">{{ c.where }}</td>
+                            <td  data-label="Локація">{{ c.city }}</td>
+           
+                            <td data-label="Username"><a href="#" class="btn btn-outline-dark btn-rounded scp" style="padding: 3px; font-size: 10px;" data-social="{{ c.social_media }}" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="{{ c.social_media }} додано до буферу обміну." data-bs-original-title="Повідомлення скопійовано"><i class="bi bi-link-45deg m-0"></i> {{ c.social_media }}</a></td>
+                            <td  data-label="Sales">{{ c.sales_manager }}</td>
+                            <td  data-label="Посилання на вакансію"><a href="{{ c.link }}" class="badge rounded-pill shade-bdr-primary" target="_blank">Посилання</a></td>
+                            <td  data-label="Статус клієнта">
+                                {% if not c.process %}
+                                <span class="badge shade-red">Необробленний</span>
+                                {% else %}
+                                <span class="badge shade-green">Обробленний</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 10px; width: fit-content;" class="dia">
+                                    <button type="button" class="btn btn-outline-success process-client bi bi-patch-check m-0 p-1" data-slug="{{c.slug}}" style="font-size: 20px;" ></button>
+
+                                    
+                                    <a href="{% url 'posts:toBuy' slug=c.slug %}" class="btn btn-outline-info bi bi-cash-coin m-0 p-1" style="font-size: 20px;" target="_blank"></a>
+                                    <button type="button" class="btn btn-outline-danger arhiv-client bi bi-trash m-0 p-1" data-slug="{{c.slug}}" style="font-size: 20px;" ></button>
+                                </div>
+                            </td>
+                          </tr>
+                          {%endfor%}
+                        </tbody>
+                      </table>
+                      <div>
+ 
+                </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card end -->
+
+
+                          <!-- Modal  -->
+          <div class="modal fade" id="scrollable" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="scrollableLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="scrollableLabel">Інформація про клієнта</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" >
+                <div class="row" id='client-info-content'>
+                   
+               
+            </div>
+          </div>
+       
+        
+
+          {% load static %}  
+
+          <script src="{% static 'assets/js/alert.js' %}"></script>
+                      
+          <script>
+              // Очікуємо, поки сторінка повністю завантажиться
+              window.onload = function() {
+                  const alertElement = document.querySelector('.alert');
+   
+                  if (alertElement) {
+                      const type = alertElement.classList.contains('alert-danger') ? 'danger' : 'success';
+                      const message = alertElement.getAttribute('data-message');
+                      if (message && message.trim() !== '') {
+                          showAlert(type, message);
+                      }
+                  }
+              };
+          </script>
+
+{% load static %}  
+<script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
+
+   <!-- Overlay Scroll JS -->
+   <script src="{% static 'assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js' %}"></script>
+   <script src="{% static 'assets/vendor/overlay-scroll/custom-scrollbar.js' %}"></script>
+
+   <!-- Data Tables -->
+   <script src="{% static 'assets/vendor/datatables/dataTables.min.js' %}"></script>
+   <script src="{% static 'assets/vendor/datatables/dataTables.bootstrap.min.js' %}"></script>
+
+   <!-- Custom Data tables -->
+   <script src="{% static 'assets/vendor/datatables/custom/custom-datatables.js' %}"></script>
+
+
+
+   <!-- Settings -->
+    <script src="{% static 'assets/js/client-to-buy.js' %}"></script>
+
+{% endblock %}
+
+
+
+
+

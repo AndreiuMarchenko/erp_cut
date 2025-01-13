@@ -1,0 +1,88 @@
+version: '3.8'
+x-environment-defaults: &environment-defaults
+  DEBUG: 'False'
+  DB_NAME: 'qss'
+  DB_USER: 'dev'
+  DB_PASSWORD: 'sakamoto39'
+  DB_HOST: 'db'
+  DB_PORT: 5433
+  CELERY_BROKER_URL: 'redis://redis:6379/0'
+  CELERY_RESULT_BACKEND: 'redis://redis:6379/0'
+  SECRET_KEY: 'secret'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+
+    environment:
+      POSTGRES_DB: qss
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: sakamoto39
+    ports:
+      - "5433:5433"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+
+  redis:
+    image: redis:latest
+
+  web:
+    build: .
+    container_name: web
+
+     
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      <<: *environment-defaults
+
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/accounts/media
+
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/static
+      - media_volume:/app/accounts/media
+
+    ports:
+      - "81:80"
+    depends_on:
+      - web
+
+  celery:
+    build: .
+    command: celery -A erpsys worker --loglevel=info
+    environment:
+      <<: *environment-defaults
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A erpsys beat --loglevel=info
+    environment:
+      <<: *environment-defaults
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:  
+  media_volume:
+  static_volume:

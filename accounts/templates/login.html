@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load widget_tweaks %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Авторизація в Porahuy.space</title>
+
+    <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/bootstrap/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/main.min.css' %}">
+
+        <!-- Meta -->
+        <meta name="description" content="ERP система для керування телеграм каналами та співробітниками">
+        <meta name="author" content="Hire.me" />
+        <meta property="og:url" content="#">
+        <meta property="og:title" content="ERP система - для керування телеграм каналами.">
+        <meta property="og:description" content="Спеціалізована система створенна для взаємодії з кадрами та клієнтами.">
+        <meta property="og:type" content="Website">
+        <meta property="og:site_name" content="Porahuy space">
+        <link rel="shortcut icon" href="{% static 'assets/images/logo_min.png' %}">
+
+</head>
+
+<body class="login-container">
+
+    <!-- Login box start -->
+    <form method="post" class="{% if form.is_bound and not form.is_valid %}was-validated{% endif %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}"/>
+        <div class="login-box">
+            <div class="login-form">
+                <img src="{% static 'assets/images/logo.png' %}" class="m-0" style="width: 100%; height: 100%;"alt="Dashboard">
+
+                <div class="login-welcome">
+                    Раді вітати, <br />Будь-ласка авторизуйтесь для використання системи.
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+                    
+                    {% if field.errors %}
+                        {{ field|add_class:"form-control is-invalid" }}
+                        <div class="invalid-feedback">
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ field|add_class:"form-control" }}
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <div class="login-form-actions">
+                    <button type="submit" class="btn">
+                        <span class="icon"><i class="bi bi-arrow-right-circle"></i></span> Увійти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- Login box end -->
+
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/modernizr.js' %}"></script>
+    <script src="{% static 'assets/js/moment.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

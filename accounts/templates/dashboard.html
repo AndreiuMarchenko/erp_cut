@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+          <!-- Row end -->
+<div class="col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Продажі за місяць</div>
+      </div>
+      <div class="card-body">
+        <div id="monthly-sales-chart"></div>
+      </div>
+    </div>
+</div>
+
+{% load static %}
+<script src="{% static 'assets/vendor/apex/apexcharts.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Отримуємо дані з контексту Django і конвертуємо їх у об'єкти JavaScript
+    var salesDates = JSON.parse('{{ sales_dates|escapejs }}');
+
+
+    var salesValues = JSON.parse('{{ sales_values|escapejs }}');
+
+
+    // Налаштування графіка
+    var options = {
+        chart: {
+            height: 300,
+            type: 'area',
+            toolbar: { show: false },
+            dropShadow: {
+                enabled: true,
+                opacity: 0.1,
+                blur: 5,
+                left: -10,
+                top: 10
+            },
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 3 },
+        series: [{
+            name: 'Продажі',
+            data: salesValues  // Значення продажів по днях
+        }],
+        xaxis: {
+            type: 'datetime',
+            categories: salesDates  // Дати для осі X
+        },
+        theme: {
+            monochrome: {
+                enabled: true,
+                colors: ['#435EEF'],
+                shadeIntensity: 0.1
+            },
+        },
+        tooltip: {
+            x: { format: 'dd/MM/yy' }
+        }
+    };
+
+    var chart = new ApexCharts(
+        document.querySelector("#monthly-sales-chart"),
+        options
+    );
+
+    chart.render();
+});
+
+</script>
+
+{% endblock %}
