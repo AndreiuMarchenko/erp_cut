@@ -72,8 +72,6 @@
             data-message="{{ success }}">
         </span>
         {% endif %}
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
         <div class="card-body">
           <div class="create-invoice-wrapper">
           <div class="col-sm-12 col-12">
@@ -85,66 +83,47 @@
                         <div class="row">
                           <div class="col-lg-6 col-sm-6 col-6">
                             <div class="customer-card">
-                              <h6>Client ID:</h6>
+                              <h6>Post ID:</h6>
                               <h5>#{{post_channel.id}}</h5>
                             </div>
                           </div>    
                       <div class="col-lg-6 col-sm-6 col-6">
                             <div class="customer-card">
-                              <h6>Username:</h6>
+                              <h6>Ім'я клієнта:</h6>
                               <h5>{{post_channel.post.username}}</h5>
                             </div>
                         </div>
                           <div class="col-lg-6 col-sm-6 col-6">
                             <div class="customer-card">
-                              <h6>Дата створення:</h6>
-                              <h5>{{client.data}}</h5>
+                              <h6>Дата оплати:</h6>
+                              <h5>{{post_channel.post.date_payment}}</h5>
                             </div>
                           </div>
                           <div class="col-lg-6 col-sm-6 col-6">
                             <div class="customer-card">
-                              <h6>Дата першої покупки:</h6>
-                              <h5>{{ data_the_first_buys|default:"Дані не знайдено" }}</h5>
+                              <h6>Категорія:</h6>
+                              <h5>{{ post_channel.post.category }}</h5>
                             </div>
                           </div>
                           <div class="col-lg-6 col-sm-6 col-6">
                             <div class="customer-card">
-                              <h6>Дата останньої покупки:</h6>
-                              <h5>{{ data_the_last_buys|default:"Дані не знайдено" }}</h5>
+                              <h6>Тип:</h6>
+                              <h5>{{ post_channel.post.types }}</h5>
                             </div>
                           </div>
-                          <div class="col-lg-6 col-sm-6 col-6">
-                            <div class="customer-card" >
-                              <h6>Кількість продажів:</h6>
-                              <h5>{{client_cost}}</h5>
-                            </div>
-                          </div>
-                          <div class="col-lg-6 col-sm-6 col-6">
-                            <div class="customer-card position-relative">
-                                <h6>Скріншот оплати:</h6>
-                                <img 
-                                    class="img-fluid change-img-avatar" 
-                                    id="preview" 
-                                    {% if is_update %}
-                                    {% if post.scrin %}
-                                    src="{{ post.scrin.url }}" alt="Зображення"
-                                    {% else %}
-                                    {% load static %}
-                                    src="{{ defualut_image }}" alt="Зображення за замовчуванням"
-                                    {% endif %}
-                                    {% else %} 
-                                    {% load static %}
-                                    src="{{ defualut_image }}"
-                                    {%endif%}
-                                    width="150px" 
-                                    height="150px" 
-                                    alt="Попередній перегляд"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modalDark"
-                                >
-                                <i class="bi bi-arrows-fullscreen fullscreen-icon"></i>
-                            </div>
-                        </div>
+                            <div class="col-lg-6 col-sm-6 col-6">
+                            <div class="customer-card">
+                            <div class="text-end">
+                        <a href="#" class="btn btn-outline-info get_post_info"
+                        style="padding: 3px;"
+                        data-channel-id="{{ post_channel.pk }}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                          Відкрити повну інформацію
+                        </a>
+                     </div>
+                                </div>
+                                </div>
    
                    
             </div>
@@ -159,22 +138,6 @@
 
           <!-- Row start -->
           <div class="row">
-            <div class="col-12 col-sm-12">
-              <h5 class="card-title">Публікації</h5>
-              <div data-select2-id="select2-data-140-kx13" style="margin-bottom: 10px;" >
-                <label class="form-label">Обрати групу каналів:</label>
-                <select id="select-chaneger" class="select-multiple js-states form-control" title="Select Channel" multiple="multiple">
-                    {% for category, channels in grouped_channels.items %}
-                        <optgroup label="{{ category }}">
-                            <!-- Опція для вибору всієї групи -->
-                            <option value="select_all_{{ category|slugify }}" class="select-all-option" data-category="{{ category }}">Вибрати всі {{ category }}</option>
-                            {% for channel in channels %}
-                                <option value="{{ channel.id }}">{{ channel.name }}</option>
-                            {% endfor %}
-                        </optgroup>
-                    {% endfor %}
-                </select>
-              </div>
                 <div class="table-responsive">
                     <table class="table truncate table-bordered">
                         <thead>
@@ -188,80 +151,34 @@
                             </tr>
                         </thead>
                         <tbody id="formset-table-body">
-                         
-                            {{ formset.management_form }}
-                            {{ formset.non_form_errors }}
-                            {% for form in formset %}
-                            <tr class="formset-row">
-                              {% for field in form %}
-                              {% if field.name == "tarif" %}
-                                    <td>
-                                        <div class="input-group m-0">
-                                            {{ field }}
-                                            <span class="input-group-text">грн</span>
-                                        </div>
-                                    </td>
-                                {% elif field.name == "post"  %}
-                                {{ field }}
-                                {% else %}
-                                    <td>{{ field }}</td>
-                                {% endif %}
-                            {% endfor %}
-
-                                <td>
-                                    <button type="button" class="btn btn-outline-danger remove-row-btn">
-                                        <i class="bi bi-trash m-0"></i>
-                                    </button>
-                                </td>
-                              
-                            </tr>
-                            {% endfor %}
-             
+                         <tr>
+                             <td>
+                             {{post_channel.channel.name}}
+                                 </td>
+                         <td>
+                             {{post_channel.time_post}}
+                                 </td>
+                             <td>
+                             {{post_channel.date_post}}
+                                 </td>
+                             <td>
+                             {{post_channel.tarif}} грн.
+                                 </td>
+                         </tr>
                 </tbody>
                     </table>
-                    <table  class="table truncate table-bordered">
-                        <tbody>
-                    <tr>
-                      <td colspan="3">
-                        <button type="button" class="btn btn-dark" id="add-new-row">
-                          Додати канал
-                        </button>
-                      </td>
-                    </tr>
-                        <tr>
-                          <td class="text-end" style="vertical-align: middle;"><p class="m-0">Початкова сума:</p></td>
-                          <td><input type="text" id="inp-total" name="total-sum" class="form-control" placeholder="0" {% if is_update %} value="{{total_tarif}}"{%endif%}/></td>
-                        </tr>
-                        <tr>
-                          <td class="text-end" style="vertical-align: middle;"><p class="m-0">Знижка % від початкової суми:</p></td>
-                          <td> <input type="text" id="inp-discount" class="form-control" placeholder="0%" /></td>
-                        </tr>
-                    <tr>
-                      <td class="text-end" >
-                        <p class="m-0 " >Сума до знижки</p>
-                        <p class="m-0">Знижка</p>
-                        <h5 class="mt-2 text-red">Загальна сума</h5>
-                      </td>
-                      <td>
-                        <p class="m-0" id="val-sum-not-discount">0.00 грн</p>
-                        <p class="m-0"  id="val-sum-discount">0.00 грн</p>
-                        <h5 class="mt-2 text-red" id="val-sum">0.00 грн</h5>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </div>
-            <div class="col-12">
-              <div class="text-end">
-                {% if is_update %}
-                <button type="submit" class="btn btn-success ms-1 is_update">Внести зміни</button>
-                {% else %}
-                <button type="submit" class="btn btn-success ms-1">Створити Invoice</button>
-                {% endif %}
-                </div>
-                </div>
-              </div>
+            <link rel="stylesheet" href="{% static 'assets/vendor/summernote/summernote-bs4.css'%}" />
+            <form method="post" id="text-form" enctype="multipart/form-data" action="{% url 'posts:save_to_avtoposting' post_chanel_id=post_channel.id %}">
+              {% csrf_token %}
+            <div class="mb-2">
+              <div class="summernote"></div>
+            </div>
+            <div class="custom-btn-group flex-end">
+              <button class="btn btn-dark" type="button">Clear</button>
+              <button class="btn btn-info" type="submit">Зберегти</button>
+            </div>
                        <!-- Form group end -->
         </form>
           <!-- Row end -->
@@ -270,46 +187,85 @@
     </div>
   </div>
 
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Переглянути публікацію</h5>
+                                        </div>
+                                        <div id="post-info">
+                                    </div>
+                                        </div>
+                                </div>
+                            </div>
 
-                       <!-- Модальне вікно -->
-
-                       <div class="modal fade" id="modalDark" tabindex="-1" aria-labelledby="modalDarkLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="modalDarkLabel">Скріншот оплати.</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                              <img id="modalImage" class="img-fluid w-100" src="{{ defualut_image }}" alt="Збільшений перегляд">
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Закрити</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
 {% block js %}
 
 
 
 {% load static %}
+<script>
+document.querySelectorAll('.get_post_info').forEach(button => {
+    button.addEventListener('click', function () {
+        const channelId = this.getAttribute('data-channel-id');
+        fetch(`/get-post-info/${channelId}`)
+            .then(response => response.text())
+            .then(html => {
+                const content = document.getElementById('post-info');
+                if (content) {
+                    content.innerHTML = html;
+                }
+            })
+            .catch(error => console.error('Error fetching channel data:', error));
+    });
+});</script>
+<script>
+
+
+
+    </script>
 
 <script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <script src="{% static 'assets/js/moment.js' %}"></script>
 
- <!-- Date Range JS -->
- <script src="{% static 'assets/vendor/daterange/daterange.js' %}"></script>
- <script src="{% static 'assets/vendor/daterange/custom-daterange.js' %}"></script>
 
-      <!-- Bootstrap Select JS -->
-    <script src="{% static 'assets/vendor/bs-select/bs-select.min.js' %}"></script>
-    <script src="{% static 'assets/vendor/bs-select/bs-select-custom.js' %}"></script>
     <!-- Buttons -->
-    <script src="{% static 'assets/js/add-post.js' %}"></script>
+    <script src="{% static 'assets/vendor/summernote/summernote-bs4.js' %}"></script>
+   <script>
 
-    <script src="{% static 'assets/vendor/input-masks/cleave.min.js' %}"></script>
+      // Summernote
+      $(document).ready(function () {
+        const messages = "{{ post_channel.post.posts_text }}";
+        const summernoteElement = $('.summernote');
+        summernoteElement.summernote({
+          height: 300,
+          tabsize: 2,
+          focus: true,
+          toolbar: [
+            ['font', ['bold', 'underline','italic', 'clear']],
+            ['para', ['ul', 'ol']],
+            ['insert', ['link']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+          ]
+        });
+        if (messages) {
+        summernoteElement.summernote('code', messages);
+      }
+      $('#text-form').submit(function(e) {
+    var content = $('.summernote').summernote('code');
+
+    $('<input>').attr({
+      type: 'hidden',
+      name: 'content',
+      value: content
+    }).appendTo('#text-form');
+    });
+    });
+
+    </script>
 
 {% endblock js %}
 {% endblock %}

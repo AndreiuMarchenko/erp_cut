@@ -9,7 +9,12 @@ urlpatterns = [
     path('arkhiv-posts/', views.ArkhivPosts.as_view(), name='arkhiv_posts'),
     path('delete-posts/<slug:slug>/<slug:channel>/', views.deletPost, name='delete_posts'),
     path('detail_post/<slug:slug>/<int:id>/', views.DetailPost.as_view(), name='detailPost'),
+
+
+    # AUTOPOSTING
     path('editor/<slug:slug>/<int:post_channel_id>/', views.EditorPostView.as_view(), name='editor'),
+    path('save-to-avtoposting/<int:post_chanel_id>/', views.save_to_avtoposting, name='save_to_avtoposting'),
+    path('delete-to-avtoposting/<int:post_chanel_id>/', views.delete_to_avtoposting, name='delete_to_avtoposting'),
 
     
 
@@ -23,6 +28,7 @@ urlpatterns = [
     path('delete-channels/<int:channel_id>', views.DeleteChannel, name='deleteChannels'),
     path('change-channels/<int:channel_id>', views.ChangeChannel, name='changeChannels'),
     path('add-channels/', views.AddChannel, name='addChannels'),
+    path('get-post-info/<int:channel_id>', views.GetPostInfo, name='GetPostInfo'),
 
 ]
 

@@ -120,6 +120,7 @@
                             <th>Контент менеджер</th>
                             <th>Статус</th>
                             <th></th>
+                            <th></th>
 
 
               
@@ -140,7 +141,7 @@
                                 <td data-label="Дата публікації">{{ c.date_post }}</td>
                                 <td data-label="Час публікації">{{ c.time_post }}</td>
                                 <td data-label="Sales">{{ c.post.sales }}</td>
-                                <td data-label="Content">{{ c.post.content }}</td>
+                                <td data-label="Content">{{ c.content_update }}</td>
     				            <td data-label="Статус">
                                     {% if not c.status_write %}
                                     <span class="badge shade-red">Необробленний</span>
@@ -150,8 +151,12 @@
 
                                 </td>
 
-				                <td data-label="Відкрити публікацію"><a href="{% url 'posts:view_invoice' slug=c.post.slug %}" class="btn btn-outline-info"> <i class="bi bi-person-square m-0"></i> </a></td>
 
+                                <td data-label="Відкрити публікацію"><a href="{% url 'posts:view_invoice' slug=c.post.slug %}" class="btn btn-outline-info"> <i class="bi bi-box-arrow-in-up-right m-0"></i> </a></td>
+                                 <form method="post"  action="{% url 'posts:delete_to_avtoposting' post_chanel_id=c.id %}">
+                                    {% csrf_token %}
+                                <td data-label="Відмінити публікацію"><button type="submit" class="btn btn-outline-danger"> <i class="bi bi-dash-circle m-0"></i> </button></td>
+                                </form>
 
                             </tr>
                             {%endfor%}

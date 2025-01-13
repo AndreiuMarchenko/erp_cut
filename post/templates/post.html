@@ -101,12 +101,11 @@
 </div>
 
       <div class="form-actions-footer">
-                        <form method="post" action="">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success bi bi-check-square m-2"
+
+                            <a href="{% url 'posts:editor' slug=channel_post.post.slug post_channel_id=channel_post.id %}" class="btn btn-success bi bi-check-square m-2"
                             data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Обробити"
-                            ></button>
-                        </form>
+                            ></a>
+
                           <form method="get" action="{% url 'posts:update_posts' slug=post.slug %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-warning to-upd bi bi-pencil-square m-2"

@@ -1,0 +1,86 @@
+ <div class="row m-3">
+      <p class="mb-2">
+        {% if post.content %}
+        <figcaption class="blockquote-footer">
+         Останні зміни вніс <cite title="Source Title">{{ post.content.first_name }} {{ post.content.last_name }}</cite>
+        </figcaption>
+        {% endif %}
+              <div class="col-lg-4 col-sm-6 col-6">
+                  <div class="customer-card">
+                    <h6>Post ID:</h6>
+                    <h5>#{{ post.post.id }}</h5>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Тариф:</h6>
+                      <h5>{{ post.tarif }} грн</h5>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Username:</h6>
+                      <h5>{{ post.post.username  }}</h5>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Тип:</h6>
+                      <h5>{{ post.post.types  }}</h5>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Дата оплати:</h6>
+                      <h5>{{ post.post.date_payment  }}</h5>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Дата публікації:</h6>
+                      <h5>{{ post.post.date_payment  }}</h5>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Категорія:</h6>
+                      <h5>{{ post.post.category  }}</h5>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Sales:</h6>
+                      <h5>{{ post.post.sales }}</h5>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Контент менеджер:</h6>
+                     {% if post.status_write == True %}
+                      <h5>{{ post.content_update }} | {{ post.content_update.first_name }} {{ post.content_update.last_name }} <span class="badge shade-green"><i class="bi bi-check-square"></i></span> </h5>
+                      {% else %}
+                      <h5><span class="badge shade-red"> Необробленна</span></h5>
+                      {%endif%}
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Текст публікації:</h6>
+                      <blockquote class="blockquote">
+                        <p>{{ post.posts_text }}</p>
+                      </blockquote>
+                    </div>
+                  </div>
+                  {% if post.scrin %}
+
+                  <div class="col-lg-6 col-sm-6 col-6">
+                    <div class="customer-card">
+                      <h6>Оплата:</h6>
+                      <blockquote class="blockquote">
+                        <img class="img-responsive-media" style="width: 50%; height: 50%;" src="{{ post.scrin.url }}" alt="">
+                      </blockquote>
+                    </div>
+                  </div>
+                    {%endif%}
+                </div>
+</div>

@@ -364,9 +364,9 @@
               ordered: 'Ordered list'
           },
           options: {
-              help: 'Help',
-              fullscreen: 'Full Screen',
-              codeview: 'Code View'
+              help: 'Допомога',
+              fullscreen: 'Повний екран',
+              codeview: 'Запис кодом'
           },
           paragraph: {
               paragraph: 'Paragraph',
@@ -398,33 +398,33 @@
               extraKeys: 'Extra keys'
           },
           help: {
-              'insertParagraph': 'Insert Paragraph',
-              'undo': 'Undoes the last command',
-              'redo': 'Redoes the last command',
-              'tab': 'Tab',
-              'untab': 'Untab',
-              'bold': 'Set a bold style',
-              'italic': 'Set a italic style',
-              'underline': 'Set a underline style',
-              'strikethrough': 'Set a strikethrough style',
-              'removeFormat': 'Clean a style',
-              'justifyLeft': 'Set left align',
-              'justifyCenter': 'Set center align',
-              'justifyRight': 'Set right align',
-              'justifyFull': 'Set full align',
-              'insertUnorderedList': 'Toggle unordered list',
-              'insertOrderedList': 'Toggle ordered list',
-              'outdent': 'Outdent on current paragraph',
-              'indent': 'Indent on current paragraph',
-              'formatPara': 'Change current block\'s format as a paragraph(P tag)',
-              'formatH1': 'Change current block\'s format as H1',
-              'formatH2': 'Change current block\'s format as H2',
-              'formatH3': 'Change current block\'s format as H3',
-              'formatH4': 'Change current block\'s format as H4',
-              'formatH5': 'Change current block\'s format as H5',
-              'formatH6': 'Change current block\'s format as H6',
-              'insertHorizontalRule': 'Insert horizontal rule',
-              'linkDialog.show': 'Show Link Dialog'
+              'insertParagraph': 'Вставити параграф',
+              'undo': 'Скасовує останню команду',
+              'redo': 'Повторює останню команду',
+              'tab': 'Табуляція',
+              'untab': 'Відмінити табуляцію',
+              'bold': 'Встановити напівжирний стиль',
+              'italic': 'Встановити курсив',
+              'underline': 'Встановити стиль підкреслення',
+              'strikethrough': 'Встановити стиль закреслення',
+              'removeFormat': 'Очистити стиль',
+              'justifyLeft': 'Встановити вирівнювання по лівому краю',
+              'justifyCenter': 'Встановити вирівнювання по центру',
+              'justifyRight': 'Встановити вирівнювання по правому краю',
+              'justifyFull': 'Встановити повне вирівнювання',
+              'insertUnorderedList': 'Переключити невпорядкований список',
+              'insertOrderedList': 'Переключити впорядкований список',
+              'outdent': 'Відступ від поточного абзацу',
+              'indent': 'Відступ від поточного абзацу',
+              'formatPara': 'Змінити формат поточного блоку на абзац (тег P)',
+              'formatH1': 'Змінити формат поточного блоку на H1',
+              'formatH2': 'Змінити формат поточного блоку на H2',
+              'formatH3': 'Змінити формат поточного блоку на H3',
+              'formatH4': 'Змінити формат поточного блоку на H4',
+              'formatH5': 'Змінити формат поточного блоку на H5',
+              'formatH6': 'Змінити формат поточного блоку на H6',
+              'insertHorizontalRule': 'Вставити горизонтальне правило',
+              'linkDialog.show': 'Показати діалогове вікно посилання'
           },
           history: {
               undo: 'Undo',
@@ -7149,11 +7149,7 @@
       HelpDialog.prototype.initialize = function () {
           var $container = this.options.dialogsInBody ? this.$body : this.$editor;
           var body = [
-              '<p class="text-center">',
-              '<a href="http://summernote.org/" target="_blank">Summernote 0.8.12</a> · ',
-              '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
-              '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
-              '</p>',
+
           ].join('');
           this.$dialog = this.ui.dialog({
               title: this.lang.options.help,

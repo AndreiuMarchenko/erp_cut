@@ -5,6 +5,7 @@ from django.db.models import Min, Max
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import  reverse_lazy
 from django.views.generic import ListView, UpdateView, CreateView
+from post.servises import pythonTelegramBot
 from sales.models import Clients
 from accounts.utils import DataMixin
 from .models import PostChannel, Post, Channels 
@@ -458,6 +459,13 @@ def AddChannel(request):
         form = ChannelForm()
         return render(request, 'edit_channel_form.html', {'form': form})
 
+
+def GetPostInfo(request,channel_id):
+    if request.method == 'GET':
+        post = get_object_or_404(PostChannel, id=channel_id)
+        return render(request, 'post_info.html', {'post': post})
+
+
     
 
 
@@ -485,3 +493,41 @@ def check_time(request):
             channel_name = PostChannel.objects.get(channel_id=channel_id, time_post=time_post, date_post=date_post).channel.name
             return JsonResponse({'exists': True, 'channel_name': channel_name})
     return JsonResponse({'exists': False})
+
+
+
+
+
+
+### WORK HERE
+
+def save_to_avtoposting(request, post_chanel_id):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        post_channel = PostChannel.objects.get(id = post_chanel_id)
+
+        post = post_channel.post
+        post.posts_text = content
+        post_channel.status_write = True
+        post_channel.content_update = request.user
+        post.save()
+        post_channel.save()
+        # HERE
+        pythonTelegramBot()
+
+    return redirect('posts:arkhiv_posts')
+
+
+
+
+
+def delete_to_avtoposting(request, post_chanel_id):
+    if request.method == 'POST':
+        post_channel = PostChannel.objects.get(id = post_chanel_id)
+        post_channel.status_write = False
+        post_channel.content_update = request.user
+        post_channel.save()
+        # HERE
+        pythonTelegramBot()
+
+    return redirect('posts:arkhiv_posts')
