@@ -513,6 +513,10 @@ def save_to_avtoposting(request, post_chanel_id):
         post.save()
         post_channel.save()
         # HERE
+        print(post_channel.channel) # object channel - pk to model post.Channels 
+        print(post_channel.time_post) # datetime
+        print(post_channel.date_post) # datetime
+        
         pythonTelegramBot()
 
     return redirect('posts:arkhiv_posts')
@@ -528,7 +532,7 @@ def delete_to_avtoposting(request, post_chanel_id):
         post_channel.content_update = request.user
         post_channel.save()
         # HERE
-        print(post_channel.channel) # object channel - pk to model Channels 
+        print(post_channel.channel) # object channel - pk to model post.Channels 
         print(post_channel.time_post) # datetime
         print(post_channel.date_post) # datetime
 
