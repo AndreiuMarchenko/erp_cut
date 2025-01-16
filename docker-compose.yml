@@ -43,6 +43,7 @@ services:
       <<: *environment-defaults
 
     volumes:
+      - ./:/app/
       - static_volume:/app/static
       - media_volume:/app/accounts/media
 
